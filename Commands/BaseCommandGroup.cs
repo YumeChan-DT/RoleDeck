@@ -12,8 +12,8 @@ using Nodsoft.YumeChan.RoleDeck.Services;
 
 namespace Nodsoft.YumeChan.RoleDeck.Commands
 {
-	[Group("roledeck"), Aliases("rd"), RequireUserPermissions(Permissions.ManageRoles & Permissions.ManageGuild), RequireBotPermissions(Permissions.Administrator)]
-	public partial class BaseCommandGroup : BaseCommandModule
+	[Group("roledeck"), Aliases("rd"), RequireGuild, RequirePermissions(Permissions.Administrator)]
+	public class BaseCommandGroup : BaseCommandModule
 	{
 		private readonly RoleMessageService service;
 
@@ -22,35 +22,35 @@ namespace Nodsoft.YumeChan.RoleDeck.Commands
 			service = roleMessageService;
 		}
 
-		[Command("track")]
+		[Command("track"), RequireGuild, RequirePermissions(Permissions.Administrator)]
 		public async Task TrackMessageAsync(CommandContext context, DiscordMessage message)
 		{
 			await service.TrackNewMessageAsync(message);
 			await context.RespondAsync($"Message `{message.Id}` is now tracked.");
 		}
 
-		[Command("untrack")]
+		[Command("untrack"), RequireGuild, RequirePermissions(Permissions.Administrator)]
 		public async Task UntrackMessageAsync(CommandContext context, DiscordMessage message)
 		{
 			await service.RemoveMessageTrackingAsync(message);
 			await context.RespondAsync($"Message `{message.Id}` is no longer tracked.");
 		}
 
-		[Command("add-role"), Aliases("bind")]
+		[Command("add-role"), Aliases("bind"), RequireGuild, RequirePermissions(Permissions.Administrator)]
 		public async Task AddRoleAsync(CommandContext context, DiscordMessage message, DiscordEmoji emoji, DiscordRole role)
 		{
 			await service.TrackNewRoleReactionAsync(message, emoji, role);
 			await context.RespondAsync($"Reaction {emoji} will now grant Role {role.Mention} on Message `{message.Id}`.");
 		}
 
-		[Command("remove-role"), Aliases("unbind")]
+		[Command("remove-role"), Aliases("unbind"), RequireGuild, RequirePermissions(Permissions.Administrator)]
 		public async Task RemoveRoleAsync(CommandContext context, DiscordMessage message, DiscordEmoji emoji)
 		{
 			await service.RemoveRoleReactionAsync(message, emoji);
 			await context.RespondAsync($"Reaction {emoji} will is no longer bound on Message `{message.Id}`.");
 		}
 
-		[Command("init-reactions")]
+		[Command("init-reactions"), RequireGuild, RequirePermissions(Permissions.Administrator)]
 		public async Task InitReactionsAsync(CommandContext context, DiscordMessage message)
 		{
 			RoleMessage tracked = await service.GetTrackedMessageAsync(message);

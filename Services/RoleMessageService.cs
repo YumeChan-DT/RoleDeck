@@ -77,7 +77,7 @@ namespace Nodsoft.YumeChan.RoleDeck.Services
 		public async Task<ulong> GetTrackedRoleIdAsync(DiscordMessage message, DiscordEmoji emoji)
 		{
 			RoleMessage tracked = await repository.FindByIdAsync(message.Id);
-			return tracked.Roles.GetValueOrDefault<string, ulong>(emoji.Name, 0);
+			return tracked?.Roles.GetValueOrDefault<string, ulong>(emoji.Name, 0) ?? 0;
 		}
 
 
