@@ -24,20 +24,20 @@ namespace Nodsoft.YumeChan.RoleDeck
 
 		public async Task OnMessageReactionAddedAsync(DiscordClient client, MessageReactionAddEventArgs e)
 		{
-			if ((await e.Channel.GetMessageAsync(e.Message.Id)).Author.IsCurrent)
+			if (!e.User.IsCurrent && (await service.GetTrackedRoleIdAsync(e.Message, e.Emoji)) is not 0 and ulong roleId)
 			{
-				logger.LogDebug("Message {0} : Added reaction {1} by {2}.", e.Message.Id, e.Emoji, e.User);
-
-				await service.TrackNewRoleReactionAsync(e.Message, e.Emoji, (e.User as DiscordMember).Roles.FirstOrDefault());
+				await (e.User as DiscordMember).GrantRoleAsync(e.Guild.GetRole(roleId));
+				logger.LogDebug("RoleMessage {0} : Granted role {1} to {2}.", e.Message.Id, roleId, e.User);
 			}
+
 		}
 
 		public async Task OnMessageReactionRemovedAsync(DiscordClient client, MessageReactionRemoveEventArgs e)
 		{
-			if ((await e.Channel.GetMessageAsync(e.Message.Id)).Author.IsCurrent)
+			if (!e.User.IsCurrent && (await service.GetTrackedRoleIdAsync(e.Message, e.Emoji)) is not 0 and ulong roleId)
 			{
-				logger.LogDebug("Message {0} : Removed reaction {1} by {2}.", e.Message.Id, e.Emoji, e.User);
-				await service.RemoveRoleReactionAsync(e.Message, e.Emoji);
+				await (e.User as DiscordMember).RevokeRoleAsync(e.Guild.GetRole(roleId));
+				logger.LogDebug("RoleMessage {0} : Revoked role {1} on {2}.", e.Message.Id, roleId, e.User);
 			}
 		}
 	}

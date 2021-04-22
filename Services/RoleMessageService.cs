@@ -18,6 +18,9 @@ namespace Nodsoft.YumeChan.RoleDeck.Services
 			repository = database.GetEntityRepository<RoleMessage, ulong>();
 		}
 
+
+		public Task<RoleMessage> GetTrackedMessageAsync(DiscordMessage message) => repository.FindByIdAsync(message.Id);
+
 		public Task TrackNewMessageAsync(DiscordMessage message)
 		{
 			if (MessageIsTracked(message.Id))
@@ -53,12 +56,12 @@ namespace Nodsoft.YumeChan.RoleDeck.Services
 				throw new ArgumentOutOfRangeException(nameof(message), "Cannot track more reactions for this message.");
 			}
 
-			if (tracked.Roles.ContainsKey(role.ToString()))
+			if (tracked.Roles.ContainsKey(emoji.Name))
 			{
 				throw new ArgumentException("This Emoji is already used for another role.", nameof(emoji));
 			}
 
-			tracked.Roles.Add(emoji, role.Id);
+			tracked.Roles.Add(emoji.Name, role.Id);
 			await repository.ReplaceOneAsync(tracked);
 		}
 
@@ -66,7 +69,7 @@ namespace Nodsoft.YumeChan.RoleDeck.Services
 		{
 			RoleMessage tracked = await repository.FindByIdAsync(message.Id) ?? throw new ArgumentException("Message is not tracked.", nameof(message));
 
-			tracked.Roles.Remove(emoji);
+			tracked.Roles.Remove(emoji.Name);
 			await repository.ReplaceOneAsync(tracked);
 		}
 
@@ -74,7 +77,7 @@ namespace Nodsoft.YumeChan.RoleDeck.Services
 		public async Task<ulong> GetTrackedRoleIdAsync(DiscordMessage message, DiscordEmoji emoji)
 		{
 			RoleMessage tracked = await repository.FindByIdAsync(message.Id);
-			return tracked.Roles.GetValueOrDefault<string, ulong>(emoji, 0);
+			return tracked.Roles.GetValueOrDefault<string, ulong>(emoji.Name, 0);
 		}
 
 
