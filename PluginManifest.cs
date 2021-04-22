@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Nodsoft.YumeChan.PluginBase;
+using Nodsoft.YumeChan.RoleDeck.Services;
 
 namespace Nodsoft.YumeChan.RoleDeck
 {
@@ -47,6 +48,7 @@ namespace Nodsoft.YumeChan.RoleDeck
 		}
 
 		public override IServiceCollection ConfigureServices(IServiceCollection services) => services
-			.AddSingleton<UserReactionsListener>();
+			.AddSingleton<UserReactionsListener>()
+			.AddSingleton<RoleMessageService>();
 	}
 }
