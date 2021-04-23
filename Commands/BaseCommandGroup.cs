@@ -57,7 +57,18 @@ namespace Nodsoft.YumeChan.RoleDeck.Commands
 
 			foreach (string reaction in tracked.Roles.Keys)
 			{
-				await message.CreateReactionAsync(DiscordEmoji.FromName(context.Client, $":{reaction}:"));
+				DiscordEmoji emoji;
+
+				if (DiscordEmoji.TryFromUnicode(context.Client, reaction, out emoji))
+				{
+
+				}
+				else
+				{
+					DiscordEmoji.TryFromName(context.Client, $":{reaction}:", out emoji);
+				}
+
+				await message.CreateReactionAsync(emoji);
 			}
 
 			await message.RespondAsync("Reactions initialized.");
