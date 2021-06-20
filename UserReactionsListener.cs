@@ -7,6 +7,7 @@ using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using Microsoft.Extensions.Logging;
+using Nodsoft.YumeChan.RoleDeck.Data;
 using Nodsoft.YumeChan.RoleDeck.Services;
 
 namespace Nodsoft.YumeChan.RoleDeck
@@ -24,12 +25,33 @@ namespace Nodsoft.YumeChan.RoleDeck
 
 		public async Task OnMessageReactionAddedAsync(DiscordClient client, MessageReactionAddEventArgs e)
 		{
-			if (!e.User.IsCurrent && (await service.GetTrackedRoleIdAsync(e.Message, e.Emoji)) is not 0 and ulong roleId)
+			if (!e.User.IsCurrent && await service.GetTrackedMessageAsync(e.Message) is RoleMessage message)
 			{
-				await (e.User as DiscordMember).GrantRoleAsync(e.Guild.GetRole(roleId));
-				logger.LogDebug("RoleMessage {0} : Granted role {1} to {2}.", e.Message.Id, roleId, e.User);
-			}
+				if (message.MutuallyExclusive)
+				{
+					foreach (KeyValuePair<string, ulong> reactionRole in message.Roles)
+					{
+						if (reactionRole.Key == e.Emoji.Name)
+						{
+							await (e.User as DiscordMember).GrantRoleAsync(e.Guild.GetRole(reactionRole.Value));
+							logger.LogDebug("RoleMessage {0} : Granted role (exclusive) {1} to {2}.", e.Message.Id, reactionRole.Value, e.User);
+						}
+						else
+						{
+							await (e.User as DiscordMember).RevokeRoleAsync(e.Guild.GetRole(reactionRole.Value));
+						}
+					}
+				}
+				else
+				{
 
+					if (message.Roles.TryGetValue(e.Emoji, out ulong roleId))
+					{
+						await (e.User as DiscordMember).GrantRoleAsync(e.Guild.GetRole(roleId));
+						logger.LogDebug("RoleMessage {0} : Granted role {1} to {2}.", e.Message.Id, roleId, e.User);
+					}
+				}
+			}
 		}
 
 		public async Task OnMessageReactionRemovedAsync(DiscordClient client, MessageReactionRemoveEventArgs e)

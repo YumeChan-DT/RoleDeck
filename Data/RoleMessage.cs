@@ -23,6 +23,10 @@ namespace Nodsoft.YumeChan.RoleDeck.Data
 
 		public Dictionary<string, ulong> Roles { get; set; }
 
+		public bool MutuallyExclusive { get; set; }
+
+
+
 		public RoleMessage() { }
 
 		public RoleMessage(DiscordMessage message)
