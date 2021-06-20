@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -57,13 +53,7 @@ namespace YumeChan.RoleDeck.Commands
 
 			foreach (string reaction in tracked.Roles.Keys)
 			{
-				DiscordEmoji emoji;
-
-				if (DiscordEmoji.TryFromUnicode(context.Client, reaction, out emoji))
-				{
-
-				}
-				else
+				if (!DiscordEmoji.TryFromUnicode(context.Client, reaction, out DiscordEmoji emoji))
 				{
 					DiscordEmoji.TryFromName(context.Client, $":{reaction}:", out emoji);
 				}
