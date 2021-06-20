@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using Nodsoft.YumeChan.RoleDeck.Data;
-using Nodsoft.YumeChan.RoleDeck.Services;
+using YumeChan.RoleDeck.Data;
+using YumeChan.RoleDeck.Services;
 
-namespace Nodsoft.YumeChan.RoleDeck.Commands
+namespace YumeChan.RoleDeck.Commands
 {
 	[Group("roledeck"), Aliases("rd"), RequireGuild, RequirePermissions(Permissions.Administrator)]
 	public class BaseCommandGroup : BaseCommandModule
@@ -57,7 +53,12 @@ namespace Nodsoft.YumeChan.RoleDeck.Commands
 
 			foreach (string reaction in tracked.Roles.Keys)
 			{
-				await message.CreateReactionAsync(DiscordEmoji.FromName(context.Client, $":{reaction}:"));
+				if (!DiscordEmoji.TryFromUnicode(context.Client, reaction, out DiscordEmoji emoji))
+				{
+					DiscordEmoji.TryFromName(context.Client, $":{reaction}:", out emoji);
+				}
+
+				await message.CreateReactionAsync(emoji);
 			}
 
 			await message.RespondAsync("Reactions initialized.");

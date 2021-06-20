@@ -1,54 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.Entities;
-using Nodsoft.YumeChan.PluginBase.Tools.Data;
-using Nodsoft.YumeChan.RoleDeck.Data;
+using MongoDB.Driver;
+using YumeChan.PluginBase.Tools.Data;
+using YumeChan.RoleDeck.Data;
 
-namespace Nodsoft.YumeChan.RoleDeck.Services
+namespace YumeChan.RoleDeck.Services
 {
 	public class RoleMessageService
 	{
-		private readonly IEntityRepository<RoleMessage, ulong> repository;
+		private readonly IMongoCollection<RoleMessage> roleMessages;
 
 		public RoleMessageService(IDatabaseProvider<PluginManifest> database)
 		{
-			repository = database.GetEntityRepository<RoleMessage, ulong>();
+			roleMessages = database.GetMongoDatabase().GetCollection<RoleMessage>(nameof(RoleMessage));
 		}
 
 
-		public Task<RoleMessage> GetTrackedMessageAsync(DiscordMessage message) => repository.FindByIdAsync(message.Id);
+		public async Task<RoleMessage> GetTrackedMessageAsync(DiscordMessage message) => (await roleMessages.FindAsync(m => m.Id == message.Id)).FirstOrDefault();
 
-		public Task TrackNewMessageAsync(DiscordMessage message)
+		public async Task TrackNewMessageAsync(DiscordMessage message)
 		{
-			if (MessageIsTracked(message.Id))
+			if (await MessageIsTracked(message.Id))
 			{
 				throw new ArgumentException("Message is already tracked.", nameof(message));
 			}
 
-			return repository.InsertOneAsync(new(message));
+			await roleMessages.InsertOneAsync(new(message));
 		}
 
-		public Task RemoveMessageTrackingAsync(DiscordMessage message)
+		public async Task RemoveMessageTrackingAsync(DiscordMessage message)
 		{
-			if (!MessageIsTracked(message.Id))
+			if (!await MessageIsTracked(message.Id))
 			{
 				throw new ArgumentException("Message is not tracked.", nameof(message));
 			}
 
-			return repository.DeleteByIdAsync(message.Id);
+			await roleMessages.DeleteOneAsync(m => m.Id == message.Id);
 		}
 
 		public async Task TrackNewRoleReactionAsync(DiscordMessage message, DiscordEmoji emoji, DiscordRole role)
 		{
-			RoleMessage tracked = await repository.FindByIdAsync(message.Id);
+			RoleMessage tracked = await GetTrackedMessageAsync(message);
 
 			if (tracked is null)
 			{
 				tracked = new(message);
-				await repository.InsertOneAsync(tracked);
+				await roleMessages.InsertOneAsync(tracked);
 			}
 
 			if (tracked.Roles.Count >= RoleMessage.MaxReactionsPerMessage)
@@ -62,25 +61,24 @@ namespace Nodsoft.YumeChan.RoleDeck.Services
 			}
 
 			tracked.Roles.Add(emoji.Name, role.Id);
-			await repository.ReplaceOneAsync(tracked);
+			await roleMessages.ReplaceOneAsync(Builders<RoleMessage>.Filter.Eq(m => m.Id, tracked.Id), tracked);
 		}
 
 		public async Task RemoveRoleReactionAsync(DiscordMessage message, DiscordEmoji emoji)
 		{
-			RoleMessage tracked = await repository.FindByIdAsync(message.Id) ?? throw new ArgumentException("Message is not tracked.", nameof(message));
-
+			RoleMessage tracked = await GetTrackedMessageAsync(message) ?? throw new ArgumentException("Message is not tracked.", nameof(message));
 			tracked.Roles.Remove(emoji.Name);
-			await repository.ReplaceOneAsync(tracked);
+			await roleMessages.ReplaceOneAsync(Builders<RoleMessage>.Filter.Eq(m => m.Id, tracked.Id), tracked);
 		}
 
 
 		public async Task<ulong> GetTrackedRoleIdAsync(DiscordMessage message, DiscordEmoji emoji)
 		{
-			RoleMessage tracked = await repository.FindByIdAsync(message.Id);
+			RoleMessage tracked = await GetTrackedMessageAsync(message);
 			return tracked?.Roles.GetValueOrDefault<string, ulong>(emoji.Name, 0) ?? 0;
 		}
 
 
-		public bool MessageIsTracked(ulong messageId) => repository.FindById(messageId) is not null;
+		public async Task<bool> MessageIsTracked(ulong messageId) => (await roleMessages.FindAsync(m => m.Id == messageId)).Any();
 	}
 }

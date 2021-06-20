@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using DSharpPlus;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Nodsoft.YumeChan.PluginBase;
-using Nodsoft.YumeChan.RoleDeck.Services;
+using YumeChan.PluginBase;
+using YumeChan.RoleDeck.Services;
 
-namespace Nodsoft.YumeChan.RoleDeck
+
+
+namespace YumeChan.RoleDeck
 {
 	public class PluginManifest : Plugin
 	{
@@ -19,35 +17,36 @@ namespace Nodsoft.YumeChan.RoleDeck
 
 
 		private readonly ILogger<PluginManifest> logger;
-		private readonly DiscordClient discordClient;
 		private readonly UserReactionsListener reactionsListener;
 
-		public PluginManifest(ILogger<PluginManifest> logger, DiscordClient discordClient, UserReactionsListener reactionsListener)
+		public PluginManifest(ILogger<PluginManifest> logger, UserReactionsListener reactionsListener)
 		{
 			this.logger = logger;
-			this.discordClient = discordClient;
 			this.reactionsListener = reactionsListener;
 		}
 
 
 		public override async Task LoadPlugin()
 		{
-			await base.LoadPlugin();
+			CancellationToken cancellationToken = CancellationToken.None; // May get added into method parameters later on.
 
-			discordClient.MessageReactionAdded += reactionsListener.OnMessageReactionAddedAsync;
-			discordClient.MessageReactionRemoved += reactionsListener.OnMessageReactionRemovedAsync;
+			await base.LoadPlugin();
+			await reactionsListener.StartAsync(cancellationToken);
 
 			logger.LogInformation("Loaded {0}.", PluginDisplayName);
 		}
 
 		public override async Task UnloadPlugin() 
 		{
+			CancellationToken cancellationToken = CancellationToken.None; // May get added into method parameters later on.
 			logger.LogInformation("Unloading {0}...", PluginDisplayName);
 
+			await reactionsListener.StopAsync(cancellationToken);
 			await base.UnloadPlugin();
 		}
 
 		public override IServiceCollection ConfigureServices(IServiceCollection services) => services
+			.AddHostedService<UserReactionsListener>()
 			.AddSingleton<UserReactionsListener>()
 			.AddSingleton<RoleMessageService>();
 	}

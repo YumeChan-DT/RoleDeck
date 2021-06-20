@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using DSharpPlus.Entities;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using Nodsoft.YumeChan.PluginBase.Tools.Data;
-using Nodsoft.YumeChan.RoleDeck.Services;
+using YumeChan.PluginBase.Tools.Data;
+using YumeChan.RoleDeck.Services;
 
-namespace Nodsoft.YumeChan.RoleDeck.Data
+namespace YumeChan.RoleDeck.Data
 {
-	public record RoleMessage : IDocument<ulong>
+	public record RoleMessage
 	{
 		[BsonIgnore]
 		public const int MaxReactionsPerMessage = 20;
