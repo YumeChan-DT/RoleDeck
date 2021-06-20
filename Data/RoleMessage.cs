@@ -11,7 +11,7 @@ using YumeChan.RoleDeck.Services;
 
 namespace YumeChan.RoleDeck.Data
 {
-	public record RoleMessage : IDocument<ulong>
+	public record RoleMessage
 	{
 		[BsonIgnore]
 		public const int MaxReactionsPerMessage = 20;
