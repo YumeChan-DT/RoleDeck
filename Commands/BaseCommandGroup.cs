@@ -7,10 +7,10 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using Nodsoft.YumeChan.RoleDeck.Data;
-using Nodsoft.YumeChan.RoleDeck.Services;
+using YumeChan.RoleDeck.Data;
+using YumeChan.RoleDeck.Services;
 
-namespace Nodsoft.YumeChan.RoleDeck.Commands
+namespace YumeChan.RoleDeck.Commands
 {
 	[Group("roledeck"), Aliases("rd"), RequireGuild, RequirePermissions(Permissions.Administrator)]
 	public class BaseCommandGroup : BaseCommandModule

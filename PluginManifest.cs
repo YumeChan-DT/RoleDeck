@@ -7,10 +7,10 @@ using DSharpPlus;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Nodsoft.YumeChan.PluginBase;
-using Nodsoft.YumeChan.RoleDeck.Services;
+using YumeChan.PluginBase;
+using YumeChan.RoleDeck.Services;
 
-namespace Nodsoft.YumeChan.RoleDeck
+namespace YumeChan.RoleDeck
 {
 	public class PluginManifest : Plugin
 	{

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus.Entities;
-using Nodsoft.YumeChan.PluginBase.Tools.Data;
-using Nodsoft.YumeChan.RoleDeck.Data;
+using YumeChan.PluginBase.Tools.Data;
+using YumeChan.RoleDeck.Data;
 
-namespace Nodsoft.YumeChan.RoleDeck.Services
+namespace YumeChan.RoleDeck.Services
 {
 	public class RoleMessageService
 	{

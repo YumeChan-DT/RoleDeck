@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,9 +7,9 @@ using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using Microsoft.Extensions.Logging;
-using Nodsoft.YumeChan.RoleDeck.Services;
+using YumeChan.RoleDeck.Services;
 
-namespace Nodsoft.YumeChan.RoleDeck
+namespace YumeChan.RoleDeck
 {
 	public class UserReactionsListener
 	{
