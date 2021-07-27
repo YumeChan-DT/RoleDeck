@@ -18,11 +18,13 @@ namespace YumeChan.RoleDeck
 
 		private readonly ILogger<PluginManifest> logger;
 		private readonly UserReactionsListener reactionsListener;
+		private readonly IncomingUsersListener incomingUsersListener;
 
-		public PluginManifest(ILogger<PluginManifest> logger, UserReactionsListener reactionsListener)
+		public PluginManifest(ILogger<PluginManifest> logger, UserReactionsListener reactionsListener, IncomingUsersListener incomingUsersListener)
 		{
 			this.logger = logger;
 			this.reactionsListener = reactionsListener;
+			this.incomingUsersListener = incomingUsersListener;
 		}
 
 
@@ -32,6 +34,7 @@ namespace YumeChan.RoleDeck
 
 			await base.LoadPlugin();
 			await reactionsListener.StartAsync(cancellationToken);
+			await incomingUsersListener.StartAsync(cancellationToken);
 
 			logger.LogInformation("Loaded {0}.", PluginDisplayName);
 		}
@@ -42,12 +45,16 @@ namespace YumeChan.RoleDeck
 			logger.LogInformation("Unloading {0}...", PluginDisplayName);
 
 			await reactionsListener.StopAsync(cancellationToken);
+			await incomingUsersListener.StopAsync(cancellationToken);
 			await base.UnloadPlugin();
 		}
 
 		public override IServiceCollection ConfigureServices(IServiceCollection services) => services
 			.AddHostedService<UserReactionsListener>()
+			.AddHostedService<IncomingUsersListener>()
+			.AddSingleton<IncomingUsersListener>()
 			.AddSingleton<UserReactionsListener>()
+			.AddSingleton<InitialRolesService>()
 			.AddSingleton<RoleMessageService>();
 	}
 }
