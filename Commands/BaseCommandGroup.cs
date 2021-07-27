@@ -9,7 +9,7 @@ using YumeChan.RoleDeck.Services;
 namespace YumeChan.RoleDeck.Commands
 {
 	[Group("roledeck"), Aliases("rd"), RequireGuild, RequirePermissions(Permissions.Administrator)]
-	public class BaseCommandGroup : BaseCommandModule
+	public partial class BaseCommandGroup : BaseCommandModule
 	{
 		private readonly RoleMessageService service;
 

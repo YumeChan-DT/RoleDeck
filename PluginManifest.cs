@@ -36,7 +36,7 @@ namespace YumeChan.RoleDeck
 			logger.LogInformation("Loaded {0}.", PluginDisplayName);
 		}
 
-		public override async Task UnloadPlugin() 
+		public override async Task UnloadPlugin()
 		{
 			CancellationToken cancellationToken = CancellationToken.None; // May get added into method parameters later on.
 			logger.LogInformation("Unloading {0}...", PluginDisplayName);
