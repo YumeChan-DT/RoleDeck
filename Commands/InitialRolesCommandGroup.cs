@@ -26,7 +26,7 @@ namespace YumeChan.RoleDeck.Commands
 			[GroupCommand]
 			public async Task ListRolesAsync(CommandContext ctx)
 			{
-				IEnumerable<ulong> roles = await service.GetGuildRoles(ctx.Guild.Id);
+				IEnumerable<ulong> roles = await service.GetGuildRolesAsync(ctx.Guild.Id);
 
 				if (roles.Any())
 				{
@@ -56,14 +56,14 @@ namespace YumeChan.RoleDeck.Commands
 			[Command("add")]
 			public async Task AddRoleAsync(CommandContext ctx, DiscordRole role)
 			{
-				await service.AddGuildRole(ctx.Guild.Id, role);
+				await service.AddGuildRoleAsync(ctx.Guild.Id, role);
 				await ctx.RespondAsync($"Role {role.Mention} will now be added to all new server members.");
 			}
 
 			[Command("remove")]
 			public async Task RemoveRoleAsync(CommandContext ctx, DiscordRole role)
 			{
-				await service.RemoveGuildRole(ctx.Guild.Id, role);
+				await service.RemoveGuildRoleAsync(ctx.Guild.Id, role);
 				await ctx.RespondAsync($"Role {role.Mention} will no longer be added to all new server members.");
 			}
 		}

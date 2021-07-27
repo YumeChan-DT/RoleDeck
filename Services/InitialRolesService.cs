@@ -17,9 +17,9 @@ namespace YumeChan.RoleDeck.Services
 			 initialRoles = databaseProvider.GetMongoDatabase().GetCollection<InitialRoles>(nameof(InitialRoles));
 		}
 
-		public async Task<IEnumerable<ulong>> GetGuildRoles(ulong guildId) => (await initialRoles.FindAsync(ir => ir.GuildId == guildId)).FirstOrDefault()?.RoleIds;
+		public async Task<IEnumerable<ulong>> GetGuildRolesAsync(ulong guildId) => (await initialRoles.FindAsync(ir => ir.GuildId == guildId)).FirstOrDefault()?.RoleIds;
 
-		public async Task AddGuildRole(ulong guildId, DiscordRole role)
+		public async Task AddGuildRoleAsync(ulong guildId, DiscordRole role)
 		{
 			InitialRoles roles = await FindOrInsertDbAsync(guildId);
 
@@ -32,7 +32,7 @@ namespace YumeChan.RoleDeck.Services
 			}
 		}
 
-		public async Task RemoveGuildRole(ulong guildId, DiscordRole role)
+		public async Task RemoveGuildRoleAsync(ulong guildId, DiscordRole role)
 		{
 			InitialRoles roles = await FindOrInsertDbAsync(guildId);
 
@@ -45,7 +45,7 @@ namespace YumeChan.RoleDeck.Services
 			}
 		}
 
-		public Task ClearGuildRoles(ulong guildId) => initialRoles.DeleteOneAsync(ir => ir.GuildId == guildId);
+		public Task ClearGuildRolesAsync(ulong guildId) => initialRoles.DeleteOneAsync(ir => ir.GuildId == guildId);
 
 
 		private async Task<InitialRoles> FindOrInsertDbAsync(ulong guildId)
