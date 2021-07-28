@@ -34,7 +34,7 @@ namespace YumeChan.RoleDeck.Commands
 
 					foreach (ulong role in roles)
 					{
-						rolesListing.AppendFormat("<@{0}>\n");
+						rolesListing.AppendFormat("{0}\n", ctx.Guild.GetRole(role).Mention);
 					}
 
 					DiscordEmbedBuilder embed = new()

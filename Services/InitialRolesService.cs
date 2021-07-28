@@ -52,7 +52,12 @@ namespace YumeChan.RoleDeck.Services
 		{
 			if ((await initialRoles.FindAsync(ir => ir.GuildId == guildId)).FirstOrDefault() is not InitialRoles roles)
 			{
-				roles = new() { GuildId = guildId };
+				roles = new()
+				{
+					GuildId = guildId,
+					RoleIds = new()
+				};
+
 				await initialRoles.InsertOneAsync(roles);
 			}
 
