@@ -82,7 +82,7 @@ namespace YumeChan.RoleDeck
 				foreach (ulong roleId in roles)
 				{
 					grantRoleTasks.Add(e.Member.GrantRoleAsync(e.Guild.GetRole(roleId)));
-					logger.LogInformation("Granting role {role} to user {user}.", roleId, e.Member.Id);
+					logger.LogDebug("Granting initial role {role} to user {user}.", roleId, e.Member.Id);
 				}
 
 				await Task.WhenAll(grantRoleTasks);

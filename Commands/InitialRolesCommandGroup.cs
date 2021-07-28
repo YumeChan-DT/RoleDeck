@@ -1,4 +1,5 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace YumeChan.RoleDeck.Commands
 {
 	public partial class BaseCommandGroup
 	{
-		[Group("initial-roles"), Aliases("ir")]
+		[Group("initial-roles"), Aliases("ir"), RequireGuild]
 		public class InitialRolesCommandGroup : BaseCommandModule
 		{
 			private readonly InitialRolesService service;
@@ -53,14 +54,14 @@ namespace YumeChan.RoleDeck.Commands
 			}
 
 
-			[Command("add")]
+			[Command("add"), RequirePermissions(Permissions.Administrator)]
 			public async Task AddRoleAsync(CommandContext ctx, DiscordRole role)
 			{
 				await service.AddGuildRoleAsync(ctx.Guild.Id, role);
 				await ctx.RespondAsync($"Role {role.Mention} will now be added to all new server members.");
 			}
 
-			[Command("remove")]
+			[Command("remove"), RequirePermissions(Permissions.Administrator)]
 			public async Task RemoveRoleAsync(CommandContext ctx, DiscordRole role)
 			{
 				await service.RemoveGuildRoleAsync(ctx.Guild.Id, role);
