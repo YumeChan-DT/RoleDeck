@@ -23,7 +23,7 @@ namespace YumeChan.RoleDeck.Services
 		{
 			InitialRoles roles = await FindOrInsertDbAsync(guildId);
 
-			if (!roles.RoleIds.Contains(role.Id))
+			if (roles.RoleIds is not null && !roles.RoleIds.Contains(role.Id))
 			{
 				await initialRoles.UpdateOneAsync(
 					Builders<InitialRoles>.Filter.Eq(ir => ir.GuildId, guildId),

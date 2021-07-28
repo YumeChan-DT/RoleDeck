@@ -28,7 +28,7 @@ namespace YumeChan.RoleDeck.Commands
 			{
 				IEnumerable<ulong> roles = await service.GetGuildRolesAsync(ctx.Guild.Id);
 
-				if (roles.Any())
+				if (roles is not null && roles.Any())
 				{
 					StringBuilder rolesListing = new();
 
