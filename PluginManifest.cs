@@ -17,14 +17,12 @@ namespace YumeChan.RoleDeck
 
 
 		private readonly ILogger<PluginManifest> logger;
-		private readonly UserReactionsListener reactionsListener;
-		private readonly IncomingUsersListener incomingUsersListener;
+		private readonly UserInteractionsListener interactionsListener;
 
-		public PluginManifest(ILogger<PluginManifest> logger, UserReactionsListener reactionsListener, IncomingUsersListener incomingUsersListener)
+		public PluginManifest(ILogger<PluginManifest> logger, UserInteractionsListener interactionsListener)
 		{
 			this.logger = logger;
-			this.reactionsListener = reactionsListener;
-			this.incomingUsersListener = incomingUsersListener;
+			this.interactionsListener = interactionsListener;
 		}
 
 
@@ -33,8 +31,7 @@ namespace YumeChan.RoleDeck
 			CancellationToken cancellationToken = CancellationToken.None; // May get added into method parameters later on.
 
 			await base.LoadPlugin();
-			await reactionsListener.StartAsync(cancellationToken);
-			await incomingUsersListener.StartAsync(cancellationToken);
+			await interactionsListener.StartAsync(cancellationToken);
 
 			logger.LogInformation("Loaded {0}.", PluginDisplayName);
 		}
@@ -44,16 +41,13 @@ namespace YumeChan.RoleDeck
 			CancellationToken cancellationToken = CancellationToken.None; // May get added into method parameters later on.
 			logger.LogInformation("Unloading {0}...", PluginDisplayName);
 
-			await reactionsListener.StopAsync(cancellationToken);
-			await incomingUsersListener.StopAsync(cancellationToken);
+			await interactionsListener.StopAsync(cancellationToken);
 			await base.UnloadPlugin();
 		}
 
 		public override IServiceCollection ConfigureServices(IServiceCollection services) => services
-			.AddHostedService<UserReactionsListener>()
-			.AddHostedService<IncomingUsersListener>()
-			.AddSingleton<IncomingUsersListener>()
-			.AddSingleton<UserReactionsListener>()
+			.AddHostedService<UserInteractionsListener>()
+			.AddSingleton<UserInteractionsListener>()
 			.AddSingleton<InitialRolesService>()
 			.AddSingleton<RoleMessageService>();
 	}
