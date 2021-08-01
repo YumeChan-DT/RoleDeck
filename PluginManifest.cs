@@ -17,12 +17,14 @@ namespace YumeChan.RoleDeck
 
 
 		private readonly ILogger<PluginManifest> logger;
-		private readonly UserInteractionsListener interactionsListener;
+		private readonly UserReactionsListener reactionsListener;
+		private readonly IncomingUsersListener incomingUsersListener;
 
-		public PluginManifest(ILogger<PluginManifest> logger, UserInteractionsListener interactionsListener)
+		public PluginManifest(ILogger<PluginManifest> logger, UserReactionsListener reactionsListener, IncomingUsersListener incomingUsersListener)
 		{
 			this.logger = logger;
-			this.interactionsListener = interactionsListener;
+			this.reactionsListener = reactionsListener;
+			this.incomingUsersListener = incomingUsersListener;
 		}
 
 
@@ -31,7 +33,8 @@ namespace YumeChan.RoleDeck
 			CancellationToken cancellationToken = CancellationToken.None; // May get added into method parameters later on.
 
 			await base.LoadPlugin();
-			await interactionsListener.StartAsync(cancellationToken);
+			await reactionsListener.StartAsync(cancellationToken);
+			await incomingUsersListener.StartAsync(cancellationToken);
 
 			logger.LogInformation("Loaded {0}.", PluginDisplayName);
 		}
@@ -41,13 +44,19 @@ namespace YumeChan.RoleDeck
 			CancellationToken cancellationToken = CancellationToken.None; // May get added into method parameters later on.
 			logger.LogInformation("Unloading {0}...", PluginDisplayName);
 
-			await interactionsListener.StopAsync(cancellationToken);
+			await reactionsListener.StopAsync(cancellationToken);
+			await incomingUsersListener.StopAsync(cancellationToken);
 			await base.UnloadPlugin();
 		}
+	}
 
+	public class DependencyRegistrations : InjectionRegistry
+	{
 		public override IServiceCollection ConfigureServices(IServiceCollection services) => services
-			.AddHostedService<UserInteractionsListener>()
-			.AddSingleton<UserInteractionsListener>()
+			.AddHostedService<UserReactionsListener>()
+			.AddHostedService<IncomingUsersListener>()
+			.AddSingleton<IncomingUsersListener>()
+			.AddSingleton<UserReactionsListener>()
 			.AddSingleton<InitialRolesService>()
 			.AddSingleton<RoleMessageService>();
 	}
