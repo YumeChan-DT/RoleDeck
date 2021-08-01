@@ -48,7 +48,10 @@ namespace YumeChan.RoleDeck
 			await incomingUsersListener.StopAsync(cancellationToken);
 			await base.UnloadPlugin();
 		}
+	}
 
+	public class DependencyRegistrations : InjectionRegistry
+	{
 		public override IServiceCollection ConfigureServices(IServiceCollection services) => services
 			.AddHostedService<UserReactionsListener>()
 			.AddHostedService<IncomingUsersListener>()

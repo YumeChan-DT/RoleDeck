@@ -15,11 +15,11 @@ namespace YumeChan.RoleDeck
 {
 	public class IncomingUsersListener : IHostedService
 	{
-		private readonly ILogger logger;
+		private readonly ILogger<IncomingUsersListener> logger;
 		private readonly InitialRolesService service;
 		private readonly DiscordClient client;
 
-		public IncomingUsersListener(ILogger logger, InitialRolesService service, DiscordClient client)
+		public IncomingUsersListener(ILogger<IncomingUsersListener> logger, InitialRolesService service, DiscordClient client)
 		{
 			this.logger = logger;
 			this.service = service;
@@ -48,7 +48,7 @@ namespace YumeChan.RoleDeck
 
 			if (roles is not null && roles.Any())
 			{
-				List<Task> grantRoleTasks = new();	
+				List<Task> grantRoleTasks = new();
 
 				foreach (ulong roleId in roles)
 				{
