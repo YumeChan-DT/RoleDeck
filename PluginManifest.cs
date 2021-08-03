@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using DSharpPlus;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using YumeChan.PluginBase;
@@ -58,6 +57,8 @@ namespace YumeChan.RoleDeck
 			.AddSingleton<IncomingUsersListener>()
 			.AddSingleton<UserReactionsListener>()
 			.AddSingleton<InitialRolesService>()
-			.AddSingleton<RoleMessageService>();
+			.AddSingleton<RoleMessageService>()
+			.AddSingleton<MassRoleService>()
+			;
 	}
 }
