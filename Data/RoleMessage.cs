@@ -14,6 +14,11 @@ namespace YumeChan.RoleDeck.Data
 		public ulong ChannelId { get; set; }
 		public ulong GuildId { get; set; }
 
+		public bool Managed { get; init; }
+
+		public string CategoryTitle { get; set; }
+		public string CategoryDesciription { get; set; }
+
 		public Dictionary<string, ulong> Roles { get; set; }
 
 		public RoleMessage() { }
