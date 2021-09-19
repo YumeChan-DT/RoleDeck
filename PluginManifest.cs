@@ -11,8 +11,8 @@ namespace YumeChan.RoleDeck
 {
 	public class PluginManifest : Plugin
 	{
-		public override string PluginDisplayName => "Yume-Chan RoleDeck";
-		public override bool PluginStealth => false;
+		public override string DisplayName => "Yume-Chan RoleDeck";
+		public override bool StealthMode => false;
 
 
 		private readonly ILogger<PluginManifest> logger;
@@ -27,29 +27,29 @@ namespace YumeChan.RoleDeck
 		}
 
 
-		public override async Task LoadPlugin()
+		public override async Task LoadAsync()
 		{
 			CancellationToken cancellationToken = CancellationToken.None; // May get added into method parameters later on.
 
-			await base.LoadPlugin();
+			await base.LoadAsync();
 			await reactionsListener.StartAsync(cancellationToken);
 			await incomingUsersListener.StartAsync(cancellationToken);
 
-			logger.LogInformation("Loaded {0}.", PluginDisplayName);
+			logger.LogInformation("Loaded {plugin}.", DisplayName);
 		}
 
-		public override async Task UnloadPlugin()
+		public override async Task UnloadAsync()
 		{
 			CancellationToken cancellationToken = CancellationToken.None; // May get added into method parameters later on.
-			logger.LogInformation("Unloading {0}...", PluginDisplayName);
+			logger.LogInformation("Unloading {plugin}...", DisplayName);
 
 			await reactionsListener.StopAsync(cancellationToken);
 			await incomingUsersListener.StopAsync(cancellationToken);
-			await base.UnloadPlugin();
+			await UnloadAsync();
 		}
 	}
 
-	public class DependencyRegistrations : InjectionRegistry
+	public class DependencyRegistrations : DependencyInjectionHandler
 	{
 		public override IServiceCollection ConfigureServices(IServiceCollection services) => services
 			.AddHostedService<UserReactionsListener>()
