@@ -3,6 +3,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,63 +11,62 @@ using YumeChan.RoleDeck.Services;
 
 
 
-namespace YumeChan.RoleDeck.Commands
+namespace YumeChan.RoleDeck.Commands;
+
+public partial class BaseCommandGroup
 {
-	public partial class BaseCommandGroup
+	[Group("initial-roles"), Aliases("ir"), RequireGuild]
+	public class InitialRolesCommandGroup : BaseCommandModule
 	{
-		[Group("initial-roles"), Aliases("ir"), RequireGuild]
-		public class InitialRolesCommandGroup : BaseCommandModule
+		private readonly InitialRolesService _service;
+
+		public InitialRolesCommandGroup(InitialRolesService service)
 		{
-			private readonly InitialRolesService service;
+			_service = service;
+		}
 
-			public InitialRolesCommandGroup(InitialRolesService service)
+		[GroupCommand]
+		public async Task ListRolesAsync(CommandContext ctx)
+		{
+			ImmutableArray<ulong> roles = (await _service.GetGuildRolesAsync(ctx.Guild.Id)).ToImmutableArray();
+
+			if (roles is { Length: > 0 })
 			{
-				this.service = service;
-			}
+				StringBuilder rolesListing = new();
 
-			[GroupCommand]
-			public async Task ListRolesAsync(CommandContext ctx)
-			{
-				IEnumerable<ulong> roles = await service.GetGuildRolesAsync(ctx.Guild.Id);
-
-				if (roles is not null && roles.Any())
+				foreach (ulong role in roles)
 				{
-					StringBuilder rolesListing = new();
-
-					foreach (ulong role in roles)
-					{
-						rolesListing.AppendFormat("{0}\n", ctx.Guild.GetRole(role).Mention);
-					}
-
-					DiscordEmbedBuilder embed = new()
-					{
-						Title = "Initial Roles",
-						Description = rolesListing.ToString(),
-						Color = DiscordColor.Aquamarine
-					};
-
-					await ctx.RespondAsync("Listing current Initial Roles :", embed);
+					rolesListing.Append($"{ctx.Guild.GetRole(role).Mention}\n");
 				}
-				else
+
+				DiscordEmbedBuilder embed = new()
 				{
-					await ctx.RespondAsync("No Initial Roles set for this server.");
-				}
+					Title = "Initial Roles",
+					Description = rolesListing.ToString(),
+					Color = DiscordColor.Aquamarine
+				};
+
+				await ctx.RespondAsync("Listing current Initial Roles :", embed);
 			}
-
-
-			[Command("add"), RequirePermissions(Permissions.Administrator)]
-			public async Task AddRoleAsync(CommandContext ctx, DiscordRole role)
+			else
 			{
-				await service.AddGuildRoleAsync(ctx.Guild.Id, role);
-				await ctx.RespondAsync($"Role {role.Mention} will now be added to all new server members.");
+				await ctx.RespondAsync("No Initial Roles set for this server.");
 			}
+		}
 
-			[Command("remove"), RequirePermissions(Permissions.Administrator)]
-			public async Task RemoveRoleAsync(CommandContext ctx, DiscordRole role)
-			{
-				await service.RemoveGuildRoleAsync(ctx.Guild.Id, role);
-				await ctx.RespondAsync($"Role {role.Mention} will no longer be added to all new server members.");
-			}
+
+		[Command("add"), RequirePermissions(Permissions.Administrator)]
+		public async Task AddRoleAsync(CommandContext ctx, DiscordRole role)
+		{
+			await _service.AddGuildRoleAsync(ctx.Guild.Id, role);
+			await ctx.RespondAsync($"Role {role.Mention} will now be added to all new server members.");
+		}
+
+		[Command("remove"), RequirePermissions(Permissions.Administrator)]
+		public async Task RemoveRoleAsync(CommandContext ctx, DiscordRole role)
+		{
+			await _service.RemoveGuildRoleAsync(ctx.Guild.Id, role);
+			await ctx.RespondAsync($"Role {role.Mention} will no longer be added to all new server members.");
 		}
 	}
 }
