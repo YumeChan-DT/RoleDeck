@@ -9,6 +9,7 @@ using YumeChan.RoleDeck.Services;
 
 namespace YumeChan.RoleDeck;
 
+// ReSharper disable once ClassNeverInstantiated.Global
 public class PluginManifest : Plugin
 {
 	public override string DisplayName => "Yume-Chan RoleDeck";
@@ -29,22 +30,22 @@ public class PluginManifest : Plugin
 
 	public override async Task LoadAsync()
 	{
-		CancellationToken cancellationToken = CancellationToken.None; // May get added into method parameters later on.
+		CancellationToken ct = CancellationToken.None; // May get added into method parameters later on.
 
 		await base.LoadAsync();
-		await _reactionsListener.StartAsync(cancellationToken);
-		await _incomingUsersListener.StartAsync(cancellationToken);
+		await _reactionsListener.StartAsync(ct);
+		await _incomingUsersListener.StartAsync(ct);
 
 		_logger.LogInformation("Loaded {Plugin}.", DisplayName);
 	}
 
 	public override async Task UnloadAsync()
 	{
-		CancellationToken cancellationToken = CancellationToken.None; // May get added into method parameters later on.
+		CancellationToken ct = CancellationToken.None; // May get added into method parameters later on.
 		_logger.LogInformation("Unloading {Plugin}...", DisplayName);
 
-		await _reactionsListener.StopAsync(cancellationToken);
-		await _incomingUsersListener.StopAsync(cancellationToken);
+		await _reactionsListener.StopAsync(ct);
+		await _incomingUsersListener.StopAsync(ct);
 		await base.UnloadAsync();
 	}
 }
