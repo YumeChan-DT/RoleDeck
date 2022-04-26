@@ -1,0 +1,6 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Publish Plugin as .DLL" type="DotNetFolderPublish" factoryName="Publish to folder">
+    <riderPublish configuration="Release" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/bin/Release/net6.0/publish" target_framework="net6.0" uuid_high="-4089196493898429333" uuid_low="-5112799525657210590" />
+    <method v="2" />
+  </configuration>
+</component>

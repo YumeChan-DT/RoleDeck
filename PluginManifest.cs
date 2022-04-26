@@ -7,58 +7,56 @@ using YumeChan.RoleDeck.Services;
 
 
 
-namespace YumeChan.RoleDeck
+namespace YumeChan.RoleDeck;
+
+// ReSharper disable once ClassNeverInstantiated.Global
+public class PluginManifest : Plugin
 {
-	public class PluginManifest : Plugin
+	public override string DisplayName => "Yume-Chan RoleDeck";
+	public override bool StealthMode => false;
+
+
+	private readonly ILogger<PluginManifest> _logger;
+	private readonly UserReactionsListener _reactionsListener;
+	private readonly IncomingUsersListener _incomingUsersListener;
+
+	public PluginManifest(ILogger<PluginManifest> logger, UserReactionsListener reactionsListener, IncomingUsersListener incomingUsersListener)
 	{
-		public override string DisplayName => "Yume-Chan RoleDeck";
-		public override bool StealthMode => false;
-
-
-		private readonly ILogger<PluginManifest> logger;
-		private readonly UserReactionsListener reactionsListener;
-		private readonly IncomingUsersListener incomingUsersListener;
-
-		public PluginManifest(ILogger<PluginManifest> logger, UserReactionsListener reactionsListener, IncomingUsersListener incomingUsersListener)
-		{
-			this.logger = logger;
-			this.reactionsListener = reactionsListener;
-			this.incomingUsersListener = incomingUsersListener;
-		}
-
-
-		public override async Task LoadAsync()
-		{
-			CancellationToken cancellationToken = CancellationToken.None; // May get added into method parameters later on.
-
-			await base.LoadAsync();
-			await reactionsListener.StartAsync(cancellationToken);
-			await incomingUsersListener.StartAsync(cancellationToken);
-
-			logger.LogInformation("Loaded {plugin}.", DisplayName);
-		}
-
-		public override async Task UnloadAsync()
-		{
-			CancellationToken cancellationToken = CancellationToken.None; // May get added into method parameters later on.
-			logger.LogInformation("Unloading {plugin}...", DisplayName);
-
-			await reactionsListener.StopAsync(cancellationToken);
-			await incomingUsersListener.StopAsync(cancellationToken);
-			await UnloadAsync();
-		}
+		_logger = logger;
+		_reactionsListener = reactionsListener;
+		_incomingUsersListener = incomingUsersListener;
 	}
 
-	public class DependencyRegistrations : DependencyInjectionHandler
+
+	public override async Task LoadAsync()
 	{
-		public override IServiceCollection ConfigureServices(IServiceCollection services) => services
-			.AddHostedService<UserReactionsListener>()
-			.AddHostedService<IncomingUsersListener>()
-			.AddSingleton<IncomingUsersListener>()
-			.AddSingleton<UserReactionsListener>()
-			.AddSingleton<InitialRolesService>()
-			.AddSingleton<RoleMessageService>()
-			.AddSingleton<MassRoleService>()
-			;
+		CancellationToken ct = CancellationToken.None; // May get added into method parameters later on.
+
+		await base.LoadAsync();
+		await _reactionsListener.StartAsync(ct);
+		await _incomingUsersListener.StartAsync(ct);
+
+		_logger.LogInformation("Loaded {Plugin}.", DisplayName);
 	}
+
+	public override async Task UnloadAsync()
+	{
+		CancellationToken ct = CancellationToken.None; // May get added into method parameters later on.
+		_logger.LogInformation("Unloading {Plugin}...", DisplayName);
+
+		await _reactionsListener.StopAsync(ct);
+		await _incomingUsersListener.StopAsync(ct);
+		await base.UnloadAsync();
+	}
+}
+
+public class DependencyRegistrations : DependencyInjectionHandler
+{
+	public override IServiceCollection ConfigureServices(IServiceCollection services) => services
+		.AddSingleton<IncomingUsersListener>()
+		.AddSingleton<UserReactionsListener>()
+		.AddSingleton<InitialRolesService>()
+		.AddSingleton<RoleMessageService>()
+		.AddSingleton<MassRoleService>()
+	;
 }
