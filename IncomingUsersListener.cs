@@ -2,19 +2,15 @@
 using DSharpPlus.EventArgs;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using YumeChan.RoleDeck.Data;
 using YumeChan.RoleDeck.Services;
 
 namespace YumeChan.RoleDeck;
 
-public class IncomingUsersListener : IHostedService
+public sealed class IncomingUsersListener : IHostedService
 {
 	private readonly ILogger<IncomingUsersListener> _logger;
 	private readonly InitialRolesService _service;
@@ -31,7 +27,7 @@ public class IncomingUsersListener : IHostedService
 	{
 		_client.GuildMemberAdded += OnGuildMemberAddedAsync;
 
-		_logger.LogInformation("Started IncomingUsersListener.");
+		_logger.LogInformation("Started IncomingUsersListener");
 		return Task.CompletedTask;
 	}
 
@@ -39,7 +35,7 @@ public class IncomingUsersListener : IHostedService
 	{
 		_client.GuildMemberAdded -= OnGuildMemberAddedAsync;
 
-		_logger.LogInformation("Started IncomingUsersListener.");
+		_logger.LogInformation("Started IncomingUsersListener");
 		return Task.CompletedTask;
 	}
 

@@ -50,7 +50,7 @@ public class PluginManifest : Plugin
 	}
 }
 
-public class DependencyRegistrations : DependencyInjectionHandler
+public sealed class DependencyRegistrations : DependencyInjectionHandler
 {
 	public override IServiceCollection ConfigureServices(IServiceCollection services) => services
 		.AddSingleton<IncomingUsersListener>()

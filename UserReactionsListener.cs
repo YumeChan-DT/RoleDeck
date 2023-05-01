@@ -9,7 +9,7 @@ using YumeChan.RoleDeck.Services;
 
 namespace YumeChan.RoleDeck;
 
-public class UserReactionsListener : IHostedService
+public sealed class UserReactionsListener : IHostedService
 {
 	private readonly ILogger<UserReactionsListener> _logger;
 	private readonly RoleMessageService _service;
