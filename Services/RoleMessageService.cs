@@ -8,7 +8,7 @@ using YumeChan.RoleDeck.Data;
 
 namespace YumeChan.RoleDeck.Services;
 
-public class RoleMessageService
+public sealed class RoleMessageService
 {
 	private readonly IMongoCollection<RoleMessage> _roleMessages;
 

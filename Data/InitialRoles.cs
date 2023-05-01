@@ -9,7 +9,7 @@ namespace YumeChan.RoleDeck.Data;
 /// <summary>
 /// Provides initial roles to apply to user, upon server join.
 /// </summary>
-public record InitialRoles
+public sealed record InitialRoles
 {
 	[BsonId, BsonRepresentation(BsonType.Int64)]
 	public ulong GuildId { get; set; }

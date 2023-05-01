@@ -11,7 +11,7 @@ using YumeChan.RoleDeck.Data;
 
 namespace YumeChan.RoleDeck.Services;
 
-public class MassRoleService
+public sealed class MassRoleService
 {
 	private readonly DiscordClient _client;
 

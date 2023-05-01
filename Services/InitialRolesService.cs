@@ -8,7 +8,7 @@ using YumeChan.RoleDeck.Data;
 
 namespace YumeChan.RoleDeck.Services;
 
-public class InitialRolesService
+public sealed class InitialRolesService
 {
 	private readonly IMongoCollection<InitialRoles> _initialRoles;
 

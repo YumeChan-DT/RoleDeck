@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace YumeChan.RoleDeck.Data;
 
-public record RoleMessage
+public sealed record RoleMessage
 {
 	[BsonIgnore]
 	public const int MaxReactionsPerMessage = 20;
