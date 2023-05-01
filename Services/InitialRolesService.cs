@@ -1,7 +1,6 @@
 ﻿using DSharpPlus.Entities;
 using MongoDB.Driver;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using YumeChan.PluginBase.Tools.Data;
 using YumeChan.RoleDeck.Data;

@@ -1,13 +1,8 @@
 ﻿using DSharpPlus;
 using DSharpPlus.Entities;
-using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using YumeChan.PluginBase.Tools.Data;
-using YumeChan.RoleDeck.Data;
 
 namespace YumeChan.RoleDeck.Services;
 
