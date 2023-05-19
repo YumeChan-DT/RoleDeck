@@ -16,7 +16,8 @@ public sealed class InitialRolesService
 		_initialRoles = databaseProvider.GetMongoDatabase().GetCollection<InitialRoles>(nameof(InitialRoles));
 	}
 
-	public async Task<IEnumerable<ulong>> GetGuildRolesAsync(ulong guildId) => (await _initialRoles.FindAsync(ir => ir.GuildId == guildId)).FirstOrDefault()?.RoleIds;
+	public async Task<IEnumerable<ulong>> GetGuildRolesAsync(ulong guildId) 
+		=> (await _initialRoles.FindAsync(ir => ir.GuildId == guildId)).FirstOrDefault()?.RoleIds;
 
 	public async Task AddGuildRoleAsync(ulong guildId, DiscordRole role)
 	{

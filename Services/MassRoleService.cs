@@ -15,9 +15,15 @@ public sealed class MassRoleService
 		_client = client;
 	}
 
-	public async Task AssignMassRoleToGuildMembersAsync(DiscordGuild guild, DiscordRole guildRole) 
-		=> await Task.WhenAll((await guild.GetAllMembersAsync()).Select(member => member.GrantRoleAsync(guildRole)));
+	public async Task AssignMassRoleToGuildMembersAsync(DiscordGuild guild, DiscordRole guildRole) => await Task.WhenAll(
+		from member in await guild.GetAllMembersAsync()
+		where !member.Roles.Contains(guildRole)
+		select member.GrantRoleAsync(guildRole)
+	);
 
-	public async Task RemoveMassRoleOnGuildMembersAsync(DiscordGuild guild, DiscordRole guildRole) 
-		=> await Task.WhenAll((await guild.GetAllMembersAsync()).Select(member => member.RevokeRoleAsync(guildRole)));
+	public async Task RemoveMassRoleOnGuildMembersAsync(DiscordGuild guild, DiscordRole guildRole) => await Task.WhenAll(
+		from member in await guild.GetAllMembersAsync()
+		where member.Roles.Contains(guildRole)
+		select member.RevokeRoleAsync(guildRole)
+	);
 }
