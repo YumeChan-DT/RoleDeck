@@ -30,7 +30,6 @@ jobs:
           { name: "GitHub Packages", source: "https://nuget.pkg.github.com/YumeChan-DT", keyname: "GITHUB_TOKEN" }
         ]
 
-    # Actions pinned to commits to prevent supply-chain attacks.
     steps:
       - uses: actions/checkout@v6
         with:
