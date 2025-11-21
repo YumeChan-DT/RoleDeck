@@ -3,14 +3,15 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using YumeChan.RoleDeck.Services;
 
 namespace YumeChan.RoleDeck.Commands;
 
 public partial class BaseCommandGroup
 {
-	[Group("mass-role"), Aliases("mr")]
-	public class MassRolesCommandGroup : BaseCommandModule
+	[Group("mass-role"), Aliases("mr"), PublicAPI]
+	public sealed class MassRolesCommandGroup : BaseCommandModule
 	{
 		private readonly MassRoleService _massRoleService;
 

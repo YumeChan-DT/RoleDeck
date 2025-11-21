@@ -41,11 +41,11 @@ public sealed class IncomingUsersListener : IHostedService
 
 	private async Task OnGuildMemberAddedAsync(DiscordClient sender, GuildMemberAddEventArgs e)
 	{
-		ImmutableArray<ulong>? roles = (await _service.GetGuildRolesAsync(e.Guild.Id))?.ToImmutableArray();
+		ulong[] roles = (await _service.GetGuildRolesAsync(e.Guild.Id)).ToArray();
 
-		if (roles is { Length: > 0 })
+		if (roles is { Length: not 0 })
 		{
-			await Task.WhenAll(roles!.Value.Select(roleId => e.Member.GrantRoleAsync(e.Guild.GetRole(roleId))));
+			await Task.WhenAll(roles.Select(roleId => e.Member.GrantRoleAsync(e.Guild.GetRole(roleId))));
 		}
 	}
 }

@@ -3,13 +3,14 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using JetBrains.Annotations;
 using YumeChan.RoleDeck.Data;
 using YumeChan.RoleDeck.Services;
 
 namespace YumeChan.RoleDeck.Commands;
 
-[Group("roledeck"), Aliases("rd"), RequireGuild, RequirePermissions(Permissions.Administrator)]
-public partial class BaseCommandGroup : BaseCommandModule
+[Group("roledeck"), Aliases("rd"), PublicAPI, RequireGuild, RequirePermissions(Permissions.Administrator)]
+public sealed partial class BaseCommandGroup : BaseCommandModule
 {
 	private readonly RoleMessageService _service;
 

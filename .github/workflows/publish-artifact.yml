@@ -13,13 +13,18 @@ jobs:
   publish-artifact:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v2
+      - uses: actions/checkout@v6
         with:
-          dotnet-version: 6.0.x
-          
+          fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0'
+
+      - uses: dotnet/nbgv@v0.4.2
+        id: nbgv
+        
       - name: Install dependencies
         run: dotnet restore
         
@@ -27,7 +32,7 @@ jobs:
         run: dotnet build -c release -o "publish"
         
       - name: Upload dotnet build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v5
         with:
           name: dotnet-build-release
           path: "build"

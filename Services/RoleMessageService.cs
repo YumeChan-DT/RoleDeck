@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DSharpPlus.Entities;
 using MongoDB.Driver;
-using YumeChan.PluginBase.Tools.Data;
+using YumeChan.PluginBase.Database.MongoDB;
 using YumeChan.RoleDeck.Data;
 
 namespace YumeChan.RoleDeck.Services;
@@ -12,7 +12,7 @@ public sealed class RoleMessageService
 {
 	private readonly IMongoCollection<RoleMessage> _roleMessages;
 
-	public RoleMessageService(IDatabaseProvider<PluginManifest> database)
+	public RoleMessageService(IMongoDatabaseProvider<PluginManifest> database)
 	{
 		_roleMessages = database.GetMongoDatabase().GetCollection<RoleMessage>(nameof(RoleMessage));
 	}

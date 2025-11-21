@@ -5,6 +5,7 @@ using DSharpPlus.Entities;
 using System.Collections.Immutable;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using YumeChan.RoleDeck.Services;
 
 
@@ -13,7 +14,7 @@ namespace YumeChan.RoleDeck.Commands;
 
 public partial class BaseCommandGroup
 {
-	[Group("initial-roles"), Aliases("ir"), RequireGuild]
+	[Group("initial-roles"), Aliases("ir"), PublicAPI, RequireGuild]
 	public class InitialRolesCommandGroup : BaseCommandModule
 	{
 		private readonly InitialRolesService _service;
