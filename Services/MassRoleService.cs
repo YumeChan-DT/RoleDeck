@@ -2,7 +2,6 @@
 using DSharpPlus.Entities;
 using System.Linq;
 using System.Threading.Tasks;
-using YumeChan.PluginBase.Tools.Data;
 
 namespace YumeChan.RoleDeck.Services;
 
@@ -10,7 +9,7 @@ public sealed class MassRoleService
 {
 	private readonly DiscordClient _client;
 
-	public MassRoleService(DiscordClient client, IDatabaseProvider<PluginManifest> databaseProvider)
+	public MassRoleService(DiscordClient client)
 	{
 		_client = client;
 	}

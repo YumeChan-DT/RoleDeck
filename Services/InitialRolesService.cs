@@ -2,7 +2,7 @@
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using YumeChan.PluginBase.Tools.Data;
+using YumeChan.PluginBase.Database.MongoDB;
 using YumeChan.RoleDeck.Data;
 
 namespace YumeChan.RoleDeck.Services;
@@ -11,7 +11,7 @@ public sealed class InitialRolesService
 {
 	private readonly IMongoCollection<InitialRoles> _initialRoles;
 
-	public InitialRolesService(IDatabaseProvider<PluginManifest> databaseProvider)
+	public InitialRolesService(IMongoDatabaseProvider<PluginManifest> databaseProvider)
 	{
 		_initialRoles = databaseProvider.GetMongoDatabase().GetCollection<InitialRoles>(nameof(InitialRoles));
 	}
