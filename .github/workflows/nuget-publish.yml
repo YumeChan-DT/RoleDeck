@@ -1,5 +1,11 @@
 name: Publish NuGet packages
 
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+  attestations: write
+  
 # Controls when the action will run. 
 on:
   push:
