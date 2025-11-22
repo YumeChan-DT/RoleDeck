@@ -65,12 +65,12 @@ jobs:
         # Only once per package: take nuget provider
         if: matrix.nuget.name == 'NuGet'
         with:
-          subject-path: "**/Release/*nupkg"
+          subject-path: "${{ env.YumeChan_PluginsLocation }}/**/*nupkg"
 
       # Publish
       - name: Publish packages to ${{ matrix.nuget.name }}
         run: |
-          dotnet nuget push "**/Release/*.nupkg" \
+          dotnet nuget push "${{ env.YumeChan_PluginsLocation }}/**/*.nupkg" \
           --source "${{ matrix.nuget.source }}" \
           --symbol-source "${{ matrix.nuget.source }}" \
           --api-key "${{ secrets[matrix.nuget.keyname] }}" \
