@@ -5,6 +5,7 @@
     <Authors>Sakura Akeno Isayeki</Authors>
     <Company>Nodsoft Systems</Company>
     <Product>RoleDeck</Product>
+    <Description>Roles management plugin for Yume-Chan</Description>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/YumeChan-DT/RoleDeck</RepositoryUrl>
 
@@ -12,7 +13,7 @@
     <OutputPath>$(YumeChan_PluginsLocation)</OutputPath>
     <Copyright>GNU-GPLv3</Copyright>
 
-    <PackageTags>yumechan,plugin</PackageTags>
+    <PackageTags>discord,yumechan,plugin,roles,permissions</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
